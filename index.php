@@ -18,34 +18,43 @@
         <form method="GET">
             <div class="form-div">
                 <label>Total Price</label>
-                <input type="text" name="Total_Price" />
+                <input type="text" name="totalPrice"  id="totalPrice"/>
                 <p>Required </p>
             </div>
             <div class="form-div">
                 <label>Number of People</label>
-                <input type="text" name="people"/>
+                <input type="text" name="people" id="people"/>
                 <p>Required </p>
             </div>
             <div class="form-div">
                 <label>How was the Service</label>
-                 <select name='tipAmount'>
-                    <option value='choose'>Choose one...</option>
-                    <option value='10'>Good (10%)</option>
+                 <select name='service' autofocus>
                     <option value='15'>Excellent (15%)</option>
+                    <option value='10'>Good (10%)</option>
                     <option value='5'>Poor (5%)</option>
                 </select>
             </div>
             <div class="form-div">
                 <label class="labelBox">Round Up?</label>
-                <input class="ckBox" type="checkbox" name="roundBill"/>
+                <input class="ckBox" type="checkbox" name="roundBill" checked/>
             </div>
             <input class="submit" type="submit" value="Calculate"/>
         </form> 
-        <?php if ($hasResults) : ?>
-            <div class='alert alert-warning message'>
-                <p>Everyone Owes $<?= $split?></p>
+        <?php if (!empty($errors)) : ?>
+            <div class='alert alert-danger'>
+                <ul>
+                    <?php foreach ($errors as $error) : ?>
+                        <li><?=$error?></li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         <?php endif; ?>
+        
+        <?php if ($form->isSubmitted() and empty($errors)) : ?>
+            <div class='alert alert-success'>
+                $<?= $split ?>
+            </div>
+        <?php endif ?>
     </div>
 </body>
 </html>

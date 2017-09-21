@@ -11,7 +11,7 @@ body{
 
 .wrapper{
     position: fixed;
-    margin-left: 400px;
+    margin-left: 200px;
     min-height: 100% !important;
     background-color: white;
     border-style: inset;

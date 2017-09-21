@@ -1,26 +1,42 @@
 <?php
 
-$hasResults = false;
-$roundBill = false;
-$split;
+require("Bill.php");
+require("Form.php");
 
-if(isset($_GET["Total_Price"])) {
-    $hasResults = true;
-    $price = $_GET["Total_Price"];
-    $people = $_GET["people"];
-    $tip = $_GET["tipAmount"];
+use Restaurant\Bill;
+use DWA\Form;
+
+$form = new Form($_GET);
+
+if($form->isSubmitted()) {
+    # Validate
+    $errors = $form->validate([
+        'totalPrice' => 'required',
+        'people' => 'required',
+        'totalPrice' => 'min:0',
+        'people' => 'numeric', 
+        'people' => 'min:0', 
+    ]);
     
-    if (isset($_GET["roundBill"])){
-        $roundBill = true;
-    } else {
-        $roundBill = false;
-    }
-} 
-
-if($hasResults) { 
-    if($roundBill){
-        $split = round(($price * ((100+$tip)/100))/$people, 0); 
-    } else{ 
-        $split = ($price * ((100+$tip)/100))/$people; 
+    if(empty($errors)){
+        $amount = $form->get('totalPrice', '');
+        $numPeople = $form->get('people', '');
+        $service = $form->get('service', '');
+        $roundBill;
+        
+        if (isset($_GET["roundBill"])){
+            $roundBill = true;
+        } else {
+            $roundBill = false;
+        }
+        
+        $bill = new Bill($amount, $numPeople, $service, $roundBill);
+        
+        $split;
+        if($bill->shouldRound()){
+            $split = $bill->amountOwedRounded();
+        } else {
+            $split = $bill->amoutOwed();
+        }
     }
 }
